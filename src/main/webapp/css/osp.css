@@ -1,0 +1,42 @@
+/* customize jquery.validate style */
+
+/* alerts for form inputs */
+
+/*make the content dispear*/
+content{
+	display:none;
+}
+
+label.error {
+position: absolute;
+color: #FFFFFF;
+display: inline-block ;
+margin-left: 8px;
+padding: 1px 3px;
+background: #F60;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+margin-top:-10px;
+z-index:3001;
+}
+label.error:after {
+right: 100%;
+border: solid transparent;
+content: " ";
+height: 0;
+width: 0;
+position: absolute;
+pointer-events: none;
+border-color: rgba(102, 102, 102, 0);
+border-right-color: #F60;
+border-width: 5px;
+top: 50%;
+margin-top: -5px;
+z-index:3001;
+}
+
+/*override select2 z-index*/
+.select2-dropdown{
+	z-index:3000;
+}

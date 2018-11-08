@@ -1,0 +1,10 @@
+<sitemesh>
+<mapping decorator="/WEB-INF/decorators/pm_template.jsp"/>
+
+<mapping path="/exclude/*" exclue="true"/>
+<mapping path="/ajax/*" exclue="true"/>
+<mapping path="**ajax=true" exclue="true"/>
+<mapping path="/login/login.html*" exclue="true"/>
+
+
+</sitemesh>

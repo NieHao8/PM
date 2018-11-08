@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+ xmlns:beans="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+ http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+   
+    <!-- 
+    <global-method-security secured-annotations="enabled" />
+     -->
+    <http use-expressions="true" auto-config="false">
+   		 
+   		 <csrf disabled="true"/>
+   		 
+    	 <intercept-url pattern="/css/**" access="permitAll"/>
+    	 <!-- 
+    	 <intercept-url pattern="/email_templates/**" access="permitAll"/>
+    	  -->
+    	 <intercept-url pattern="/font-awesome/**" access="permitAll"/>
+    	 <intercept-url pattern="/fonts/**" access="permitAll"/>
+    	 <intercept-url pattern="/img/**" access="permitAll"/>
+    	 <intercept-url pattern="/js/**" access="permitAll"/>
+    	 <intercept-url pattern="/rest/**" access="permitAll"/>
+		 <!--  <intercept-url pattern="/404.jsp" access="permitAll"/> -->
+		 <intercept-url pattern="/login/login.html" access="permitAll"/>
+         <intercept-url pattern="/**" access="hasRole('USER')"/>
+		 
+		<!-- 
+			<intercept-url pattern="/**" access="permitAll"/>
+		 -->
+		 
+		 <!-- limit a user can only login onece at a time  
+		 <session-management>
+			 <concurrency-control max-sessions="1" />
+		</session-management>
+		 -->
+        <form-login 
+	         login-processing-url="/login/j_spring_security_check"
+	         login-page="/login/login.html" 
+	         default-target-url="/index.html" 
+	         authentication-failure-url="/login/login.html?error=1"/>
+	    
+        <logout  invalidate-session="true"  logout-url="/logout" logout-success-url="/login.html"/>
+        <remember-me key="test"  services-ref="rememberMeServices" /> 
+    </http>
+    
+    <!-- To enable method level annotation security @Secured constraint -->
+    
+    <authentication-manager alias="authenticationManager">
+	    <authentication-provider ref="customAuthenticationProvider"/>
+	</authentication-manager>
+	
+    <beans:bean id="customAuthenticationProvider" class="com.test.pm.security.CustomAuthenticationProvider"/>
+    <!--
+    <beans:bean id="customAuthenticationProvider" class="com.trendmicro.osp.web.security.CustomAuthenticationProvider_debug"/>
+    -->
+     <beans:bean id="authenticationManager2" class="org.springframework.security.authentication.ProviderManager">
+     	<beans:constructor-arg>
+     		<beans:list>
+     			<beans:ref bean="rememberMeAuthenticationProvider"/>
+     		</beans:list>
+     	</beans:constructor-arg>
+     </beans:bean>
+    
+    <beans:bean id="userService" class="com.test.pm.security.UserDetailServiceImpl" />
+    
+    <beans:bean id="rememberMeFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+	  <beans:constructor-arg ref="authenticationManager2" />
+	  <beans:constructor-arg ref="rememberMeServices"/>
+	</beans:bean>
+	
+	<beans:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+	  <beans:constructor-arg name="key" value="test"/>
+	  <beans:constructor-arg name="userDetailsService" ref="userService"/>
+	</beans:bean>
+	
+	<beans:bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+	  <beans:constructor-arg name="key" value="test"/>
+	</beans:bean>
+</beans:beans>
